@@ -1,51 +1,92 @@
-#Give defenition to function calculate()
+from tkinter import *
+from decimal import *
+import math
+
+root = Tk()
+root.title('Calculator')
+
+buttons = (('7', '8', '9', '/', '4'),
+           ('4', '5', '6', '*', '4'),
+           ('1', '2', '3', '-', '4'),
+           ('0', '.', '=', '+', '4'),
+           ('%', 'x^n', 'n√x', 'x!', '4')
+           )
+
+activeStr = ''
+stack = []
+
 def calculate():
-    #User input
-    number_1 = int(input('Please enter the first number: '))
-    operation = input('''
-    Please type in the math operation you would like to complete:
-    + for addition
-    - for subtraction
-    * for multiplication
-    / for division
-    ''')
-    number_2 = int(input('Please enter the second number: '))
-    #Calculation
+    global stack
+    global label
+    result = 0
+    operand2 = Decimal(stack.pop())
+    operation = stack.pop()
+    operand1 = Decimal(stack.pop())
+
     if operation == '+':
-        print('{} + {} = '.format(number_1, number_2))
-        print(number_1 + number_2)
-    elif operation == '-':
-        print('{} - {} = '.format(number_1, number_2))
-        print(number_1 - number_2)
-    elif operation == '*':
-        print('{} * {} = '.format(number_1, number_2))
-        print(number_1 * number_2)
-    elif operation == '/':
-        print('{} / {} = '.format(number_1, number_2))
-        print(number_1 / number_2)
+        result = operand1 + operand2
+    if operation == '-':
+        result = operand1 - operand2
+    if operation == '/':
+        result = operand1 / operand2
+    if operation == '*':
+        result = operand1 * operand2
+    label.configure(text=str(result))
+    if operation == '%':
+        result = operand1 /100
+    if operation == 'x^n':
+        result - operand1 ** operand2
+    if operation == 'n√x':
+        result = operand1 ** (1/operand2)
+    if operation == 'x!':
+        result == math.factorial(operand1)
+
+
+
+
+
+def click(text):
+    global activeStr
+    global stack
+    if text == 'CE':
+        stack.clear()
+        activeStr = ''
+        label.configure(text='0')
+    elif '0' <= text <= '9':
+        activeStr += text
+        label.configure(text=activeStr)
+    elif text == '.':
+        if activeStr.find('.') == -1:
+            activeStr += text
+            label.configure(text=activeStr)
     else:
-        print('You have not typed a valid operator, please run the program again.')
+        if len(stack) >= 2:
+            stack.append(label['text'])
+            calculate()
+            stack.clear()
+            stack.append(label['text'])
+            activeStr = ''
+            if text != '=':
+                stack.append(text)
+        else:
+            if text != '=':
+                stack.append(label['text'])
+                stack.append(text)
+                activeStr = ''
+                label.configure(text='0')
 
-# Give definition again() in calculate()
-def again():
-    #User decision if they want to do again
-    calc_again = input('''
-     Do you want to calculate again?
-    Please type Y for YES or N for NO.
-     ''')
-    if calc_again.upper() == 'Y':
-        calculate()
-    elif calc_again.upper() == 'N':
-        print('See you later.')
-    else:
-        again()
+label = Label(root, bg="white", text='0', width=35)
+label.grid(row=0, column=0, columnspan=4, sticky="nsew")
 
-# Give definition welcome()
-def welcome():
-    print('''Welcome to the Calculator! 
-    Have a nice calculation!''')
+button = Button(root, text='CE',  command=lambda text='CE': click(text))
+button.grid(row=1, column=3, sticky="nsew")
+for row in range(5):
+    for col in range(4):
+        button = Button(root, text=buttons[row][col],
+                command=lambda row=row, col=col: click(buttons[row][col]))
+        button.grid(row=row + 2, column=col, sticky="nsew")
 
-# Do actual calculator
-welcome()
-calculate()
-again()
+root.grid_rowconfigure(6, weight=1)
+root.grid_columnconfigure(4, weight=1)
+
+root.mainloop()
