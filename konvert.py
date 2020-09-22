@@ -1,4 +1,4 @@
-#change for homework
+#change for homewor gjxtve-nj ybxtuj yt ghjcnblbn gbsfjbvsfksbmfdk
 # пользователь вводит данные
 user_type = input('''Добрый день!
     Вас приветствует конвертер валют. Вы можете сконвертировать рубли в доллары, евро, йены и юани
