@@ -1,3 +1,4 @@
+#change for homework
 # пользователь вводит данные
 #second homework
 user_type = input('''Добрый день!
